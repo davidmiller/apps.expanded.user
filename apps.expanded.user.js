@@ -17,53 +17,111 @@
 // @include       *google*
 // ==/UserScript==
 
-// EDIT: User vars
+
+// EDIT THIS: User vars
 var domain = 'deadpansincerity.com';
+// END EDIT THIS
+
 
 // Set our global vars
 var url = String( window.location );
-var locations = {
-                 'gmail': 'http://mail.google.com/a/'
-                 }
 
-// Gmail functions
-if ( url.substr( 0, 24 ) == 'http://mail.google.com/a' ) 
+
+function appsExpander()
+//  Main app expander class
 {
-    window.addEventListener( 'load', function() 
+
+
+    this.locations = {
+                      'gmail': 'http://mail.google.com/a/',
+                      'calendar': 'http://www.google.com/calendar/hosted/',
+                      'docs': ''
+                      }
+
+
+    this.gmail = function()
+    // Loads the gmail greasemonkey api and inserts a Google Reader link
     {
-        if ( unsafeWindow.gmonkey ) 
+        window.addEventListener( 'load', function() 
         {
-            unsafeWindow.gmonkey.load( '1.0', function( gmail ) 
+            if ( unsafeWindow.gmonkey ) 
             {
-                var masthead = gmail.getMastheadElement();
-                var link = document.createElement( 'a' );
-                link.innerHTML = '<a class="gb1 qq" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
-                mastheadDivs = masthead.getElementsByTagName( "div" );
-                for ( var i = 0; i < mastheadDivs.length; i++ )
+                unsafeWindow.gmonkey.load( '1.0', function( gmail ) 
                 {
-                    if( mastheadDivs[i].id == 'gbar' )
+                    var masthead = gmail.getMastheadElement();
+                    var link = document.createElement( 'a' );
+                    link.innerHTML = '<a class="gb1 qq" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
+                    mastheadDivs = masthead.getElementsByTagName( "div" );
+                    for ( var i = 0; i < mastheadDivs.length; i++ )
                     {
-                        var gbar = mastheadDivs[i];
-                        break;
+                        if( mastheadDivs[i].id == 'gbar' )
+                        {
+                            var gbar = mastheadDivs[i];
+                            break;
+                        }
                     }
-                }
-                gbar.appendChild( link );
-            });
+                    gbar.appendChild( link );
+                });
+            }
+        }, true );
+        return true;
+    }
+
+
+    this.google_calendar = function()
+    //  Inserts a Google Reader link into the gbar
+    {
+        var gbar = document.getElementById( 'gbar' );
+        var link = document.createElement( 'a' );
+        link.innerHTML = '<a class="gb1" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
+        gbar.appendChild( link );
+        return true;
+    }
+
+
+    this.google_reader = function()
+    //  Changes the target locations of the gmail and Google Calendar links
+    //  in the gbar
+    {
+        var gbar = document.getElementById( 'gbar' );
+        var links = gbar.childNodes[0].getElementsByTagName( 'a' );
+        for ( var j = 0; j < links.length; j++ )
+        {
+            if ( links[j].href.substr( 0, 22 ) == 'http://mail.google.com' )
+            {
+                links[j].href = this.locations.gmail + domain + '/#inbox';
+            }
+            else if ( links[j].href.substr( 0, 30 ) == 'http://www.google.com/calendar' )
+            {
+                links[j].href = this.locations.calendar + domain; + '/render?tab=mc'
+            }
         }
-    }, true );
+        return true;
+    }
+
+
+    this.dispatch = function()
+    // Dynamic dispatcher function based on URL
+    {
+        if ( url.substr( 0, 24 ) == 'http://mail.google.com/a' ) 
+        {
+            this.gmail();
+        }
+        else if ( url.substr( 0, 28 ) == 'http://www.google.com/reader' )
+        {
+            this.google_reader();
+        }
+        else if ( url.substr( 0, 30 ) == 'http://www.google.com/calendar' )
+        {
+            this.google_calendar();
+        }
+        return true;
+    }
+    
+
+    this.dispatch();
+
 }
 
-// Google Reader functions
-if ( url.substr( 0, 28 ) == 'http://www.google.com/reader' )
-{
-    var gbar = document.getElementById( 'gbar' );
-    var links = gbar.childNodes[0].getElementsByTagName( 'a' );
-    for ( var j = 0; j < links.length; j++ )
-    {
-        if ( links[j].href.substr( 0, 22 ) == 'http://mail.google.com' )
-        {
-            links[j].href = locations.gmail + domain + '/#inbox';
-            break;
-        }
-    }
-}
+// Initialises the appsExpander object
+var appsExpander = new appsExpander()

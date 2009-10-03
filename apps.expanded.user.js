@@ -32,6 +32,12 @@ function appsExpander()
 {
 
 
+    this.links = {
+                  'Analytics': 'https://www.google.com/analytics/settings/home',
+                  'second': 'http://example.com'
+                 }
+
+
     this.locations = {
                       'gmail': 'http://mail.google.com/a/',
                       'calendar': 'http://www.google.com/calendar/hosted/',
@@ -39,14 +45,42 @@ function appsExpander()
                       }
 
 
-    this.gbar_link = function()
-    // Inserts a link to Google Reader into the gbar
+    this.gbar_link = function( href, text )
+    // Inserts a link into the gbar
     {
         var gbar = document.getElementById( 'gbar' );
         var link = document.createElement( 'a' );
-        link.innerHTML = '<a class="gb1" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
+        link.innerHTML = '<a class="gb1" target="_blank" href="' + href + '">' + text + '</a>';
         gbar.appendChild( link );
         return true;
+    }
+
+
+    this.insert_link_reader = function()
+    //  inserts a link to google Reader into the gbar
+    {
+        if ( this.gbar_link( 'http://www.google.com/reader/view/?tab=my', 'Reader' ) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+    this.link_fns = function()
+    {
+        for ( var k in this.links )
+        {
+            fn_name = 'insert_link_' + k;
+            fn_name = fn_name.toLowerCase();
+            this[fn_name] = function()
+            {
+                eval( "alert( eval( 'k' ) )" );
+            }
+        }
     }
 
 
@@ -84,7 +118,7 @@ function appsExpander()
     //  This is a placeholder function for calendar-specific
     //  modifications
     {
-        if ( this.gbar_link() )
+        if ( this.reader_link() )
         {
             return true;
         }
@@ -100,14 +134,15 @@ function appsExpander()
     //  This is a placeholder function for google 
     //  docs-specific modifications
     {
-        if ( this.gbar_link() )
+        if ( this.reader_link() )
         {
             return true;
         }
         else
         {
             return false;
-        }    }
+        }    
+    }
 
 
     this.google_reader = function()
@@ -148,20 +183,22 @@ function appsExpander()
         }
         else if ( url.substr( 0, 37 ) == 'http://www.google.com/calendar/hosted' )
         {
-            this.gbar_link();
+            this.insert_link_reader();
         }
         else if ( url.substr( 0, 25 ) == 'http://docs.google.com/a/' )
         {
-            this.gbar_link();
+            this.insert_link_reader();
         }
 
         return true;
     }
     
-
+    this.link_fns();
     this.dispatch();
 
 }
 
 // Initialises the appsExpander object
 var appsExpander = new appsExpander()
+
+//appsExpander.insert_link_analytics()

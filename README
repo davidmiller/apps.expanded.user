@@ -1,0 +1,18 @@
+// Google Apps expanded
+// version 0.1
+// 2009-09-03
+//
+// --------------------------------------------------------------------
+//
+// This Greasemonkey script 'adds' Google Reader to Google Apps by
+// placing a link in the top left navigation, and makes your apps 
+// mail account the target of the 'mail' link in the Google Reader
+// gbar
+//
+// --------------------------------------------------------------------
+//
+// ==UserScript==
+// @name          Google Apps Expanded
+// @description   Expands Google apps to include Google Reader
+// @include       *google*
+// ==/UserScript==

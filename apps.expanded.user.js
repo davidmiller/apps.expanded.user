@@ -35,8 +35,19 @@ function appsExpander()
     this.locations = {
                       'gmail': 'http://mail.google.com/a/',
                       'calendar': 'http://www.google.com/calendar/hosted/',
-                      'docs': ''
+                      'docs': 'http://docs.google.com/a/'
                       }
+
+
+    this.gbar_link = function()
+    // Inserts a link to Google Reader into the gbar
+    {
+        var gbar = document.getElementById( 'gbar' );
+        var link = document.createElement( 'a' );
+        link.innerHTML = '<a class="gb1" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
+        gbar.appendChild( link );
+        return true;
+    }
 
 
     this.gmail = function()
@@ -70,13 +81,33 @@ function appsExpander()
 
     this.google_calendar = function()
     //  Inserts a Google Reader link into the gbar
+    //  This is a placeholder function for calendar-specific
+    //  modifications
     {
-        var gbar = document.getElementById( 'gbar' );
-        var link = document.createElement( 'a' );
-        link.innerHTML = '<a class="gb1" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
-        gbar.appendChild( link );
-        return true;
+        if ( this.gbar_link() )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
+
+
+    this.google_docs = function()
+    //  Inserts a Google Reader link into the gbar
+    //  This is a placeholder function for google 
+    //  docs-specific modifications
+    {
+        if ( this.gbar_link() )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }    }
 
 
     this.google_reader = function()
@@ -93,7 +124,11 @@ function appsExpander()
             }
             else if ( links[j].href.substr( 0, 30 ) == 'http://www.google.com/calendar' )
             {
-                links[j].href = this.locations.calendar + domain; + '/render?tab=mc'
+                links[j].href = this.locations.calendar + domain + '/render?tab=mc';
+            }
+            else if ( links[j].href.substr( 0, 22 ) == 'http://docs.google.com' )
+            {
+                links[j].href = this.locations.docs + domain + '/?tab=co#all';
             }
         }
         return true;
@@ -103,7 +138,7 @@ function appsExpander()
     this.dispatch = function()
     // Dynamic dispatcher function based on URL
     {
-        if ( url.substr( 0, 24 ) == 'http://mail.google.com/a' ) 
+        if ( url.substr( 0, 25 ) == 'http://mail.google.com/a/' ) 
         {
             this.gmail();
         }
@@ -111,10 +146,15 @@ function appsExpander()
         {
             this.google_reader();
         }
-        else if ( url.substr( 0, 30 ) == 'http://www.google.com/calendar' )
+        else if ( url.substr( 0, 37 ) == 'http://www.google.com/calendar/hosted' )
         {
-            this.google_calendar();
+            this.gbar_link();
         }
+        else if ( url.substr( 0, 25 ) == 'http://docs.google.com/a/' )
+        {
+            this.gbar_link();
+        }
+
         return true;
     }
     

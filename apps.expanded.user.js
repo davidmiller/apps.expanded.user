@@ -5,7 +5,7 @@
 // --------------------------------------------------------------------
 //
 // This Greasemonkey script 'adds' Google Reader to Google Apps by
-// placing a link in the top left navigation, and makes your apps 
+// placing a link in the top left navigation, and makes your apps
 // mail account the target of the 'mail' link in the Google Reader
 // gbar
 //
@@ -32,17 +32,11 @@ function appsExpander()
 {
 
 
-    this.links = {
-                  'Analytics': 'https://www.google.com/analytics/settings/home',
-                  'second': 'http://example.com'
-                 }
-
-
     this.locations = {
                       'gmail': 'http://mail.google.com/a/',
                       'calendar': 'http://www.google.com/calendar/hosted/',
                       'docs': 'http://docs.google.com/a/'
-                      }
+    };
 
 
     this.gbar_link = function( href, text )
@@ -53,11 +47,11 @@ function appsExpander()
         link.innerHTML = '<a class="gb1" target="_blank" href="' + href + '">' + text + '</a>';
         gbar.appendChild( link );
         return true;
-    }
+    };
 
 
     this.insert_link_reader = function()
-    //  inserts a link to google Reader into the gbar
+    //  inserts a link to Google Reader into the gbar
     {
         if ( this.gbar_link( 'http://www.google.com/reader/view/?tab=my', 'Reader' ) )
         {
@@ -67,31 +61,31 @@ function appsExpander()
         {
             return false;
         }
-    }
+    };
 
 
-    this.link_fns = function()
+    this.insert_link_analytics = function()
+    //  Inserts a link to Google Analytics
     {
-        for ( var k in this.links )
+        if ( this.gbar_link( 'https://www.google.com/analytics/settings/home', 'Analytics' ) )
         {
-            fn_name = 'insert_link_' + k;
-            fn_name = fn_name.toLowerCase();
-            this[fn_name] = function()
-            {
-                eval( "alert( eval( 'k' ) )" );
-            }
+  	    return true;
         }
-    }
+        else
+	{
+  	    return false;
+	}
+    };
 
 
     this.gmail = function()
     // Loads the gmail greasemonkey api and inserts a Google Reader link
     {
-        window.addEventListener( 'load', function() 
+        window.addEventListener( 'load', function()
         {
-            if ( unsafeWindow.gmonkey ) 
+            if ( unsafeWindow.gmonkey )
             {
-                unsafeWindow.gmonkey.load( '1.0', function( gmail ) 
+                unsafeWindow.gmonkey.load( '1.0', function( gmail )
                 {
                     var masthead = gmail.getMastheadElement();
                     var link = document.createElement( 'a' );
@@ -110,7 +104,7 @@ function appsExpander()
             }
         }, true );
         return true;
-    }
+    };
 
 
     this.google_calendar = function()
@@ -126,12 +120,12 @@ function appsExpander()
         {
             return false;
         }
-    }
+    };
 
 
     this.google_docs = function()
     //  Inserts a Google Reader link into the gbar
-    //  This is a placeholder function for google 
+    //  This is a placeholder function for google
     //  docs-specific modifications
     {
         if ( this.reader_link() )
@@ -141,8 +135,8 @@ function appsExpander()
         else
         {
             return false;
-        }    
-    }
+        }
+    };
 
 
     this.google_reader = function()
@@ -167,13 +161,13 @@ function appsExpander()
             }
         }
         return true;
-    }
+    };
 
 
     this.dispatch = function()
     // Dynamic dispatcher function based on URL
     {
-        if ( url.substr( 0, 25 ) == 'http://mail.google.com/a/' ) 
+        if ( url.substr( 0, 25 ) == 'http://mail.google.com/a/' )
         {
             this.gmail();
         }
@@ -184,21 +178,22 @@ function appsExpander()
         else if ( url.substr( 0, 37 ) == 'http://www.google.com/calendar/hosted' )
         {
             this.insert_link_reader();
+            this.insert_link_analytics();
         }
         else if ( url.substr( 0, 25 ) == 'http://docs.google.com/a/' )
         {
             this.insert_link_reader();
+	    this.insert_link_analytics();
         }
-
         return true;
-    }
-    
-    this.link_fns();
+    };
+
+
     this.dispatch();
+
 
 }
 
-// Initialises the appsExpander object
-var appsExpander = new appsExpander()
 
-//appsExpander.insert_link_analytics()
+// Initialises the appsExpander object
+var appsExpander = new appsExpander();

@@ -39,16 +39,16 @@ function appsExpander()
     };
 
 
-    this.gbar_link = function( href, text, gbar )
+    this.gbar_link = function( opts )
     // Inserts a link into the gbar
     {
-        if( ! gbar )
+        if( !opts.gbar )
 	{
-            var gbar = document.getElementById( 'gbar' );
+            opts.gbar = document.getElementById( 'gbar' );
 	}
         var link = document.createElement( 'a' );
-        link.innerHTML = '<a class="gb1" target="_blank" href="' + href + '">' + text + '</a>';
-        gbar.appendChild( link );
+        link.innerHTML = '<a class="gb1 ' + opts.classes + '" target="_blank" href="' + opts.href + '">' + opts.text + '</a>';
+        opts.gbar.appendChild( link );
         return true;
     };
 
@@ -56,7 +56,10 @@ function appsExpander()
     this.insert_link_reader = function()
     //  inserts a link to Google Reader into the gbar
     {
-        if ( this.gbar_link( 'http://www.google.com/reader/view/?tab=my', 'Reader' ) )
+        if ( this.gbar_link( {
+			       href: 'http://www.google.com/reader/view/?tab=my',
+	  		       text: 'Reader'
+			     } ) )
         {
             return true;
         }
@@ -70,7 +73,10 @@ function appsExpander()
     this.insert_link_analytics = function()
     //  Inserts a link to Google Analytics
     {
-        if ( this.gbar_link( 'https://www.google.com/analytics/settings/home', 'Analytics' ) )
+        if ( this.gbar_link( {
+			       href: 'https://www.google.com/analytics/settings/home',
+			       text: 'Analytics'
+			     } ) )
         {
   	    return true;
         }
@@ -100,7 +106,20 @@ function appsExpander()
                             break;
                         }
                     }
-                    this.gbar_link( 'http://www.google.com/reader/view/?tab=my', 'Reader', gbar );
+                    //  Jumping out to global scope as this gets reset by
+                    //  the Gmail greasemonkey API
+                    appsExpander.gbar_link( {
+					      href: 'http://www.google.com/reader/view/?tab=my',
+					      text: 'Reader',
+					      gbar:  gbar,
+					      classes: 'qq'
+					    } );
+                    appsExpander.gbar_link( {
+					      href: 'https://www.google.com/analytics/settings/home',
+					      text: 'Analytics',
+					      gbar:  gbar,
+					      classes: 'qq'
+					    } );
                 });
             }
         }, true );

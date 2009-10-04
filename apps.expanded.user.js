@@ -39,10 +39,13 @@ function appsExpander()
     };
 
 
-    this.gbar_link = function( href, text )
+    this.gbar_link = function( href, text, gbar )
     // Inserts a link into the gbar
     {
-        var gbar = document.getElementById( 'gbar' );
+        if( ! gbar )
+	{
+            var gbar = document.getElementById( 'gbar' );
+	}
         var link = document.createElement( 'a' );
         link.innerHTML = '<a class="gb1" target="_blank" href="' + href + '">' + text + '</a>';
         gbar.appendChild( link );
@@ -88,8 +91,6 @@ function appsExpander()
                 unsafeWindow.gmonkey.load( '1.0', function( gmail )
                 {
                     var masthead = gmail.getMastheadElement();
-                    var link = document.createElement( 'a' );
-                    link.innerHTML = '<a class="gb1 qq" target="_blank" href="http://www.google.com/reader/view/?tab=my">Reader</a>';
                     mastheadDivs = masthead.getElementsByTagName( "div" );
                     for ( var i = 0; i < mastheadDivs.length; i++ )
                     {
@@ -99,43 +100,11 @@ function appsExpander()
                             break;
                         }
                     }
-                    gbar.appendChild( link );
+                    this.gbar_link( 'http://www.google.com/reader/view/?tab=my', 'Reader', gbar );
                 });
             }
         }, true );
         return true;
-    };
-
-
-    this.google_calendar = function()
-    //  Inserts a Google Reader link into the gbar
-    //  This is a placeholder function for calendar-specific
-    //  modifications
-    {
-        if ( this.reader_link() )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    };
-
-
-    this.google_docs = function()
-    //  Inserts a Google Reader link into the gbar
-    //  This is a placeholder function for google
-    //  docs-specific modifications
-    {
-        if ( this.reader_link() )
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
     };
 
 
@@ -170,22 +139,29 @@ function appsExpander()
         if ( url.substr( 0, 25 ) == 'http://mail.google.com/a/' )
         {
             this.gmail();
+  	    return true;
         }
         else if ( url.substr( 0, 28 ) == 'http://www.google.com/reader' )
         {
             this.google_reader();
+  	    return true;
         }
         else if ( url.substr( 0, 37 ) == 'http://www.google.com/calendar/hosted' )
         {
             this.insert_link_reader();
             this.insert_link_analytics();
+  	    return true;
         }
         else if ( url.substr( 0, 25 ) == 'http://docs.google.com/a/' )
         {
             this.insert_link_reader();
 	    this.insert_link_analytics();
+  	    return true;
         }
-        return true;
+        else
+	{
+  	    return false;
+	}
     };
 
 

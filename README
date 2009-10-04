@@ -4,10 +4,10 @@
 //
 // --------------------------------------------------------------------
 //
-// This Greasemonkey script 'adds' Google Reader to Google Apps by
-// placing a link in the top left navigation, and makes your apps 
-// mail account the target of the 'mail' link in the Google Reader
-// gbar
+// This Greasemonkey script 'adds' Google Reader and Google Analytics
+// to Google Apps by placing a link in the top left navigation, and 
+// makes your hosted Google Apps accounts the targets of the Mail, 
+// Calendar and Documents links in the Google Reader gbar
 //
 // --------------------------------------------------------------------
 //

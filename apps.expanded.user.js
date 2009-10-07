@@ -1,5 +1,5 @@
 // Google Apps expanded
-// version 0.1
+// version 0.1.1
 // 2009-09-04
 //
 // Copyright 2009 David Miller
@@ -172,23 +172,23 @@ function appsExpander()
     this.dispatch = function()
     // Dynamic dispatcher function based on URL
     {
-        if ( url.substr( 0, 25 ) == 'http://mail.google.com/a/' )
+        if ( url.substr( 0, 25 ) == 'http://mail.google.com/a/' || url.substr( 0, 25 ) == 'https://mail.google.com/a')
         {
             this.gmail();
   	    return true;
         }
-        else if ( url.substr( 0, 28 ) == 'http://www.google.com/reader' )
+        else if ( url.substr( 0, 29 ) == 'http://www.google.com/reader/' || url.substr( 0, 29 ) == 'https://www.google.com/reader')
         {
             this.google_reader();
   	    return true;
         }
-        else if ( url.substr( 0, 37 ) == 'http://www.google.com/calendar/hosted' )
+        else if ( url.substr( 0, 38 ) == 'http://www.google.com/calendar/hosted/' || url.substr( 0, 38 ) == 'https://www.google.com/calendar/hosted')
         {
             this.insert_link_reader();
             this.insert_link_analytics();
   	    return true;
         }
-        else if ( url.substr( 0, 25 ) == 'http://docs.google.com/a/' )
+        else if ( url.substr( 0, 25 ) == 'http://docs.google.com/a/' || url.substr( 0, 25 ) == 'https://docs.google.com/a')
         {
             this.insert_link_reader();
 	    this.insert_link_analytics();
@@ -205,7 +205,6 @@ function appsExpander()
 
 
 }
-
 
 // Initialises the appsExpander object
 var appsExpander = new appsExpander();
